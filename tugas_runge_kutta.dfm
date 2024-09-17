@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 522
-  Top = 237
-  Width = 1044
-  Height = 412
+  Left = 757
+  Top = 233
+  Width = 905
+  Height = 461
   Caption = 'Form1'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -213,9 +213,9 @@ object Form1: TForm1
     end
   end
   object btn1: TBitBtn
-    Left = 752
-    Top = 304
-    Width = 121
+    Left = 8
+    Top = 360
+    Width = 137
     Height = 49
     TabOrder = 2
     Kind = bkClose

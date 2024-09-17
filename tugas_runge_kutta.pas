@@ -45,12 +45,12 @@ type
 
 var
   Form1: TForm1;
-  freq, x0, y0, step_size : Extended;
-  step_max : Integer;
+  freq, x0, y0, step_size, step_max : Extended;
 
 implementation
 
 {$R *.dfm}
+
 function f(t : Extended) : Extended;
 begin
   Result := -(Cos(2 * Pi * t * freq))/(2 * PI * freq) + 1 + 1/(2 * Pi * freq);
@@ -79,7 +79,7 @@ begin
         if var_name = 'freq' then
           freq := StrToFloat(labeledEdit.Text)
         else if var_name = 'step_max' then
-          step_max := StrToInt(labeledEdit.Text)
+          step_max := StrToFloat(labeledEdit.Text)
         else if var_name = 'step_size' then
           step_size := StrToFloat(labeledEdit.Text)
         else if var_name = 'x0' then
@@ -107,7 +107,7 @@ begin
       if var_name = 'freq' then
         labeledEdit.Text := FloatToStr(freq)
       else if var_name = 'step_max' then
-        labeledEdit.Text := IntToStr(step_max)
+        labeledEdit.Text := FloatToStr(step_max)
       else if var_name = 'step_size' then
         labeledEdit.Text := FloatToStr(step_size)
       else if var_name = 'x0' then
@@ -125,15 +125,15 @@ var
   euler_result : array of Extended;
 begin
   Series1.Clear;
-  SetLength(euler_result, step_max);
+  SetLength(euler_result, Round(step_max/step_size));
   x_before := x0;
   euler_result[0] := y0;
   Series1.AddXY(x_before, euler_result[0]);
 
-  for i := 1 to step_max - 1 do
+  for i := 1 to Round(step_max/step_size) - 1 do
     begin
       x_before := x_before + step_size;
-      euler_result[i] := euler_result[i-1] + step_size * first_f(x_before, 0.0);
+      euler_result[i] := euler_result[i-1] + step_size * first_f(x_before, euler_result[i-1]);
       Series1.AddXY(x_before, euler_result[i]);
     end;
 end;
@@ -145,13 +145,13 @@ var
   midpoint_result, half_calc: array of Extended;
 begin
   Series4.Clear;
-  SetLength(midpoint_result, step_max);
-  SetLength(half_calc, step_max);
+  SetLength(midpoint_result, Round(step_max/step_size));
+  SetLength(half_calc, Round(step_max/step_size));
   x_before := x0;
   midpoint_result[0] := y0;
   Series4.AddXY(x_before, midpoint_result[0]);
 
-  for i := 1 to step_max - 1 do
+  for i := 1 to Round(step_max/step_size) - 1 do
   begin
     half_calc[i-1] := midpoint_result[i-1] + (step_size / 2) * first_f(x_before, midpoint_result[i-1]);
     x_before := x_before + (step_size/2);
@@ -168,14 +168,14 @@ var
   heun_result, predictor, corrector: array of Extended;
 begin
   Series2.Clear;
-  SetLength(heun_result, step_max);
-  SetLength(predictor, step_max);
-  SetLength(corrector, step_max);
+  SetLength(heun_result, Round(step_max/step_size));
+  SetLength(predictor, Round(step_max/step_size));
+  SetLength(corrector, Round(step_max/step_size));
   x_before := x0;
   heun_result[0] := y0;
   Series2.AddXY(x_before, heun_result[0]);
 
-  for i := 1 to step_max - 1 do
+  for i := 1 to Round(step_max/step_size) - 1 do
   begin
     predictor[i-1] := heun_result[i-1] + step_size * first_f(x_before, heun_result[i-1]);
     corrector[i-1] := heun_result[i-1] + (step_size / 2) * (first_f(x_before, heun_result[i-1]) + first_f(x_before + step_size, predictor[i-2]));
@@ -192,12 +192,12 @@ var
   ralston_result: array of Extended;
 begin
   Series3.Clear;
-  SetLength(ralston_result, step_max);
+  SetLength(ralston_result, Round(step_max/step_size));
   x_before := x0;
   ralston_result[0] := y0;
   Series3.AddXY(x_before, ralston_result[0]);
 
-  for i := 1 to step_max - 1 do
+  for i := 1 to Round(step_max/step_size) - 1 do
   begin
     k1 := first_f(x_before, ralston_result[i-1]);
     k2 := first_f(x_before + 0.75 * step_size, ralston_result[i-1] + 0.75 * k1 * step_size);
@@ -214,12 +214,12 @@ var
   RK_Result : array of Extended;
 begin
   Series5.Clear;
-  SetLength(RK_result, step_max);
+  SetLength(RK_result, Round(step_max/step_size));
   x_before := x0;
   RK_result[0] := y0;
   Series5.AddXY(x_before, RK_result[0]);
 
-  for i := 1 to step_max - 1 do
+  for i := 1 to Round(step_max/step_size) - 1 do
   begin
     k1 := first_f(x_before, RK_result[i-1]);
     k2 := first_f(x_before + (step_size/2), (RK_result[i-1] + 0.5 * k1 * step_size));
@@ -237,12 +237,12 @@ var
   RK_Result : array of Extended;
 begin
   Series6.Clear;
-  SetLength(RK_result, step_max);
+  SetLength(RK_result, Round(step_max/step_size));
   x_before := x0;
   RK_result[0] := y0;
   Series6.AddXY(x_before, RK_result[0]);
 
-  for i := 1 to step_max - 1 do
+  for i := 1 to Round(step_max/step_size) - 1 do
   begin
     k1 := first_f(x_before, RK_result[i-1]);
     k2 := first_f(x_before + step_size/2, (RK_result[i-1] + 0.5 * k1 * step_size));
@@ -261,12 +261,12 @@ var
   RK_Result : array of Extended;
 begin
   Series7.Clear;
-  SetLength(RK_result, step_max);
+  SetLength(RK_result, Round(step_max/step_size));
   x_before := x0;
   RK_result[0] := y0;
   Series7.AddXY(x_before, RK_result[0]);
 
-  for i := 1 to step_max - 1 do
+  for i := 1 to Round(step_max/step_size) - 1 do
   begin
     k1 := first_f(x_before, RK_result[i-1]);
     k2 := first_f(x_before + step_size/4, (RK_result[i-1] + 0.25 * k1 * step_size));
@@ -288,7 +288,7 @@ begin
   showValue();
   Series8.Clear;
   x := x0;
-  for i := 0 to step_max - 1 do
+  for i := 0 to Round(step_max/step_size) - 1 do
   begin
     Series8.AddXY(x, f(x));
     x := x + step_size;
@@ -314,5 +314,5 @@ begin
  x0 := 0.0;
  y0 := 1.0;
  step_size := 0.01;
- step_max := 500;
+ step_max := 0.5;
 end.
