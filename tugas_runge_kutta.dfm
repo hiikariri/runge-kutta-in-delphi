@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 757
-  Top = 233
+  Left = 655
+  Top = 243
   Width = 905
   Height = 461
   Caption = 'Form1'
@@ -21,6 +21,8 @@ object Form1: TForm1
     Legend.CheckBoxes = True
     Title.Text.Strings = (
       'Runge-Kutta')
+    BottomAxis.Title.Caption = 'Time (s)'
+    LeftAxis.Title.Caption = 'Amplitude'
     View3D = False
     TabOrder = 0
     object Series1: TLineSeries
